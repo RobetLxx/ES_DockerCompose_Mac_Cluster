@@ -5,8 +5,7 @@
 ### 2.1 Docker官网安装 Docker Desktop
 
 Mac安装很简单，只需要到[Docker Desktop 官网](https://www.docker.com/products/docker-desktop/)去下载对应 OS版本的就行，下载安装完会自动帮你加载 docker 和 docker-compose，不过当你需要使用时需要把这个 desktop 打开。否则 docker 就无法使用。
-
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/38268592/418804612-c6516609-2e28-43f8-9c2a-874c7f543eab.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250304%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250304T040950Z&X-Amz-Expires=300&X-Amz-Signature=6602400e0e495cc356d3f48a6d863af8ae5be9d15b407b7f895c3c64a13408f6&X-Amz-SignedHeaders=host)
+<img width="1680" alt="image-20250304092837863" src="https://github.com/user-attachments/assets/79a210ab-811e-4210-849d-974d40620ff4" />
 
 ### 2.2 查看版本
 
@@ -14,24 +13,24 @@ Mac安装很简单，只需要到[Docker Desktop 官网](https://www.docker.com/
 docker version
 docker-compose version
 ```
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/38268592/418804877-bf64ea11-8f0f-4b56-8cdb-eeee99a56571.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250304%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250304T041023Z&X-Amz-Expires=300&X-Amz-Signature=e54c542c333c4ef0d5637caaa36e652cf046f05214c3728658542740a32963d5&X-Amz-SignedHeaders=host)
-
+<img width="630" alt="image-20250304093105654" src="https://github.com/user-attachments/assets/8c0bc3d5-108a-445d-9021-27aef56468c4" />
 
 之后需要更改 docker 的国内源，由于 hub.docker 官网国内限制挺大的，一般我们如果直接用pull 镜像下来会非常慢。所以尽量采用国内源。推荐去[这个网站](https://www.coderjia.cn/archives/dba3f94c-a021-468a-8ac6-e840f85867ea)去找最新的 docker 国内源地址。之后在 Desktop 里设置里找到 Docker Engine 然后将国内源替换进去。
-
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/38268592/418805693-9433b990-c254-41dd-91f1-f07822fa810c.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250304%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250304T041050Z&X-Amz-Expires=300&X-Amz-Signature=2eca49d196d0689aa93997dffc54cdfbdef7ab0e6b43abf1e0cbc675075540ff&X-Amz-SignedHeaders=host)
+<img width="1579" alt="image-20250304093500884" src="https://github.com/user-attachments/assets/ef71adbd-7069-4785-9897-0db099095856" />
 
 ### **2.3 修改 docker desktop 中允许连接本地网络**
 
 由于 Mac 原生不支持本地连接，所以Mac需要在 docker-hub 里打开设置，找到 Resources，其中有一个 NetWork,勾选里面的Enable host networking
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/38268592/418829310-d61235b8-17f1-4c66-a9cc-dd5c8b9e823e.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250304%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250304T041109Z&X-Amz-Expires=300&X-Amz-Signature=be6a08cc304262d705deb5d37a68f140f3c049e2afdbba0c35e4d2af11cb2cb7&X-Amz-SignedHeaders=host)
+<img width="1564" alt="image-20250304114055580" src="https://github.com/user-attachments/assets/8748a3e3-8270-4978-a5a6-6178de9c6c5c" />
+
 
 
 ## 三、集群架构
 
 ### 3.1 结构图及解释
-![image-20250304122813671](/Users/lingjunhao/Library/Application Support/typora-user-images/image-20250304122813671.png)
+<img width="953" alt="image-20250304122813671" src="https://github.com/user-attachments/assets/760a18e5-5be4-4db4-a0d8-17e2eb930045" />
+
 
 - `Master`节点作为`Master`节点与协调节点，为防止脑裂问题，降低负载，不存数据
 
@@ -279,9 +278,9 @@ DefaultLimitMEMLOCK=infinity
 docker ps 
 ```
 
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/38268592/418828983-c210c7f9-4128-44e7-901e-d1b7190011b7.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250304%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250304T041144Z&X-Amz-Expires=300&X-Amz-Signature=f541c16e415f38a27981841d13aba27da5d24d43efbb5038f7f08cf30d4941e3&X-Amz-SignedHeaders=host)
+<img width="1023" alt="image-20250304120049835" src="https://github.com/user-attachments/assets/071720c1-fea1-4b6a-9230-38a3ef4ed05b" />
+
 
 命令行输入`curl http://localhost:9200/_cat/health`或者浏览器打开http://localhost:9200/_cat/health?v 查看集群状态，出现如下信息则集群搭建成功
-
-![](https://github-production-user-asset-6210df.s3.amazonaws.com/38268592/418828984-72a0603e-2132-4add-8155-3844d777aea2.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250304%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250304T041202Z&X-Amz-Expires=300&X-Amz-Signature=25b9187eb8fe749dfc6d28264ed4e3cffca82f806d246fe9e75928608381de52&X-Amz-SignedHeaders=host)
+<img width="1821" alt="image-20250304115928407" src="https://github.com/user-attachments/assets/6a10ec36-b72a-4e71-abca-b74f49d69152" />
 
