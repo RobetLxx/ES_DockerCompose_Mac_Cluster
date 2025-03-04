@@ -11,7 +11,7 @@ bootstrap.memory_lock: true
 network.host: 0.0.0.0
 http.port: 9200
 transport.tcp.port: 9300
-#discovery.seed_hosts: ["192.168.2.101:9301","192.168.2.101:9302","192.168.2.101:9303","192.168.2.101:9304"] 
+discovery.seed_hosts: ["192.168.2.101:9301","192.168.2.101:9302","192.168.2.101:9303","192.168.2.101:9304"] 
 cluster.initial_master_nodes: ["master"] 
 #gateway.recover_after_data_nodes: 2
 http.cors.enabled: true

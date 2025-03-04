@@ -6,6 +6,7 @@
 
 Mac安装很简单，只需要到[Docker Desktop 官网](https://www.docker.com/products/docker-desktop/)去下载对应 OS版本的就行，下载安装完会自动帮你加载 docker 和 docker-compose，不过当你需要使用时需要把这个 desktop 打开。否则 docker 就无法使用。
 <img width="1680" alt="image-20250304092837863" src="https://github.com/user-attachments/assets/c6516609-2e28-43f8-9c2a-874c7f543eab" />
+
 ### 2.2 查看版本
 
 ```bash
@@ -18,6 +19,12 @@ docker-compose version
 之后需要更改 docker 的国内源，由于 hub.docker 官网国内限制挺大的，一般我们如果直接用pull 镜像下来会非常慢。所以尽量采用国内源。推荐去[这个网站](https://www.coderjia.cn/archives/dba3f94c-a021-468a-8ac6-e840f85867ea)去找最新的 docker 国内源地址。之后在 Desktop 里设置里找到 Docker Engine 然后将国内源替换进去。
 
 <img width="1579" alt="image-20250304093500884" src="https://github.com/user-attachments/assets/9433b990-c254-41dd-91f1-f07822fa810c" />
+
+### **2.3 修改 docker desktop 中允许连接本地网络**
+
+由于 Mac 原生不支持本地连接，所以Mac需要在 docker-hub 里打开设置，找到 Resources，其中有一个 NetWork,勾选里面的Enable host networking
+
+![image-20250304114055580](/Users/lingjunhao/Library/Application Support/typora-user-images/image-20250304114055580.png)
 
 ## 三、集群架构
 
@@ -44,6 +51,9 @@ docker-compose version
 下载地址：https://github.com/RobetLxx/ES_DockerCompose_Mac_Cluster
 ```bash
 .
+├── docker-es-cluster-down.sh
+├── docker-es-cluster-stop.sh
+├── docker-es-cluster-up.sh
 ├── docker-es-data01
 │   ├── data01
 │   ├── data01-logs
@@ -72,13 +82,17 @@ docker-compose version
 │   │   └── elasticsearch.yml
 │   ├── master-data
 │   └── master-logs
-└── docker-es-tribe
-    ├── docker-compose.yml
-    ├── .env
-    ├── es-config
-    │   └── elasticsearch.yml
-    ├── tribe-data
-    └── tribe-logs
+├── docker-es-tribe
+│   ├── docker-compose.yml
+│   ├── .env
+│   ├── es-config
+│   │   └── elasticsearch.yml
+│   ├── tribe-data
+│   └── tribe-logs
+├── kibana
+│   └── docker-compose.yml
+└── plugins
+    └── elasticsearch-analysis-ik-7.17.27
 ```
 ### 4.2 集群配置说明
 #### 4.2.1 master节点docker-compose.yml配置说明
@@ -90,11 +104,23 @@ services:
         container_name: es-master
         environment: # setting container env
             - ES_JAVA_OPTS=${ES_JVM_OPTS}   # set es bootstrap jvm args
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+          nofile:
+            soft: 65536
+            hard: 65536
         restart: always
         volumes:
             - ./es-config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+            # es data路径
             - ${MASTER_DATA_DIR}:/usr/share/elasticsearch/data:rw
+            # es log路径
             - ${MASTER_LOGS_DIR}:/usr/share/elasticsearch/logs:rw
+            # 集成分词插件
+            - ${MASTER_PLUGINS_DIR}:/usr/share/elasticsearch/plugins/elasticsearch-analysis-ik-7.17.27
+        #由于 Mac 原生不支持本地连接，所以Mac需要在 docker-hub 里打开设置，找到 Resources，其中有一个 NetWork,勾选里面的Enable host networking
         network_mode: "host"
 ```
 > 修改`pull`的镜像，替换其中的变量与配置文件，挂载数据与日志目录，最后用的`host`主机模式，让节点服务占用到实体机端口
@@ -108,16 +134,26 @@ services:
 # ======================== Elasticsearch Configuration =========================
 cluster.name: es-cluster
 node.name: master 
-node.master: true
-node.data: false
 node.attr.rack: r1 
+# node.master: true
+# node.data: false
+node.roles: [master]
+path.data: /usr/share/elasticsearch/data
+path.logs: /usr/share/elasticsearch/logs
 bootstrap.memory_lock: true 
-http.port: 9201
-network.host: 192.168.3.27
-transport.tcp.port: 9301
-discovery.seed_hosts: ["192.168.3.27:9302","192.168.3.27:9303","192.168.3.27:9304","192.168.3.27:9305"] 
+network.host: 0.0.0.0
+http.port: 9200
+transport.tcp.port: 9300
+discovery.seed_hosts: ["192.168.2.101:9301","192.168.2.101:9302","192.168.2.101:9303","192.168.2.101:9304"] 
 cluster.initial_master_nodes: ["master"] 
-gateway.recover_after_nodes: 2
+#gateway.recover_after_data_nodes: 2
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+http.cors.allow-methods: OPTIONS, HEAD, GET, POST, PUT, DELETE
+http.cors.allow-headers: "X-Requested-With, Content-Type, Content-Length, X-User, Authorization"
+ingest.geoip.downloader.enabled: false
+#最好还是开开，只不过开开后需要设置一下账户密码比较麻烦，我本地用就不开了
+xpack.ml.enabled: false
 ```
 > - `transport.tcp.port` 设置`Elaticsearch`多节点协调的端口号
 >- `discovery.seed_hosts` 设置当前节点启动后要发现的协调节点位置，当然自己不需要发现自己，推荐使用`ip:port`形式，集群形成快
@@ -134,6 +170,8 @@ ES_JVM_OPTS=-Xms2048m -Xmx2048m
 MASTER_DATA_DIR=./master-data
 # set master node logs folder
 MASTER_LOGS_DIR=./master-logs
+# 插件目录
+MASTER_PLUGINS_DIR=../plugins/elasticsearch-analysis-ik-7.17.27
 ```
 
 
@@ -154,9 +192,9 @@ MASTER_LOGS_DIR=./master-logs
 7. `docker stop contains_name`根据容器名称关闭容器，不移除容器。
 
 ### 5.2 单服务环境使用说明
-1. `sh docker-es-cluster-up.sh`创建并启动集群
-2. `shdocker-es-cluster-stop.sh`停止集群
-3. `docker-es-cluster-down.sh`停止并移除集群
+1. `sudo sh docker-es-cluster-up.sh`创建并启动集群
+2. `sudo sh docker-es-cluster-stop.sh`停止集群
+3. `sudo sh docker-es-cluster-down.sh`停止并移除集群
 >- 如果你想让这些脚本有执行权限，不妨试试sudo chmod +x *.sh
 >- 这些脚本中没有使用sudo，如需要使用sudo才能启动docker,请添加当前用户到docker组
 
@@ -237,7 +275,6 @@ DefaultLimitMEMLOCK=infinity
 docker ps 
 ```
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20201217142846306.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N0d3kyOTEzMTQ=,size_16,color_FFFFFF,t_70)
-`curl http://localhost:9200/_cat/health?v` 查看集群状态，出现如下信息则集群搭建成功![在这里插入图片描述](https://img-blog.csdnimg.cn/20201217144226540.png)
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20201217141810858.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2N0d3kyOTEzMTQ=,size_16,color_FFFFFF,t_70)
+![image-20250304120049835](/Users/lingjunhao/Library/Application Support/typora-user-images/image-20250304120049835.png)`curl http://localhost:9200/_cat/health?v` 查看集群状态，出现如下信息则集群搭建成功
 
+![image-20250304115928407](/Users/lingjunhao/Library/Application Support/typora-user-images/image-20250304115928407.png)
