@@ -1,5 +1,6 @@
 ## 一、前言
 `Docker Compose`是 `docker` 提供的一个命令行工具，用来定义和运行由多个容器组成的应用。使用 `compose`，我们可以通过 `YAML`或者`YML` 文件声明式的定义应用程序的各个服务，并由单个命令完成应用的创建和启动。
+
 `ElasticSearch`版本为7.17.27。分词器也为7.17.27，分词器可以去官网下载，本文用的ik中文分词。
 ## 二、Mac docker 和docker-compose安装
 ### 2.1 Docker官网安装 Docker Desktop
