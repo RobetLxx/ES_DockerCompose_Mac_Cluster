@@ -1,0 +1,22 @@
+# ======================== Elasticsearch Configuration =========================
+cluster.name: es-cluster
+node.name: tribe
+node.attr.rack: r1 
+# node.master: false
+# node.data: false
+node.roles: []
+path.data: /usr/share/elasticsearch/data
+path.logs: /usr/share/elasticsearch/logs
+bootstrap.memory_lock: true 
+network.host: 0.0.0.0
+http.port: 9204
+transport.tcp.port: 9304
+discovery.seed_hosts: ["192.168.2.101:9300","192.168.2.101:9301","192.168.2.101:9302","192.168.2.101:9303"] 
+cluster.initial_master_nodes: ["master"] 
+# gateway.recover_after_data_nodes: 2
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+http.cors.allow-methods: OPTIONS, HEAD, GET, POST, PUT, DELETE
+http.cors.allow-headers: "X-Requested-With, Content-Type, Content-Length, X-User, Authorization"
+ingest.geoip.downloader.enabled: false
+xpack.ml.enabled: false

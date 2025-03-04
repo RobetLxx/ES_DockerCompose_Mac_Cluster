@@ -1,0 +1,23 @@
+services:
+    es-data01:
+        image: elasticsearch:7.17.27
+        container_name: es-data01
+        environment: # setting container env
+            - ES_JAVA_OPTS=${ES_JVM_OPTS}   # set es bootstrap jvm args
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+          nofile:
+            soft: 65536
+            hard: 65536
+        restart: always
+        volumes:
+            - ./es-config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+            # es data路径
+            - ${DATA_DIR}:/usr/share/elasticsearch/data:rw
+            # es log路径
+            - ${LOGS_DIR}:/usr/share/elasticsearch/logs:rw
+            # 集成分词插件
+            - ${MASTER_PLUGINS_DIR}:/usr/share/elasticsearch/plugins/elasticsearch-analysis-ik-7.17.27
+        network_mode: "host"

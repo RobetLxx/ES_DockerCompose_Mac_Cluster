@@ -1,0 +1,24 @@
+services:
+    es-master:
+        image: elasticsearch:7.17.27
+        container_name: es-master
+        environment: # setting container env
+            - ES_JAVA_OPTS=${ES_JVM_OPTS}   # set es bootstrap jvm args
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+          nofile:
+            soft: 65536
+            hard: 65536
+        restart: always
+        volumes:
+            - ./es-config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+            # es data路径
+            - ${MASTER_DATA_DIR}:/usr/share/elasticsearch/data:rw
+            # es log路径
+            - ${MASTER_LOGS_DIR}:/usr/share/elasticsearch/logs:rw
+            # 集成分词插件
+            - ${MASTER_PLUGINS_DIR}:/usr/share/elasticsearch/plugins/elasticsearch-analysis-ik-7.17.27
+        #由于 Mac 原生不支持本地连接，所以Mac需要在 docker-hub 里打开设置，找到 Resources，其中有一个 NetWork,勾选里面的Enable host networking
+        network_mode: "host"
