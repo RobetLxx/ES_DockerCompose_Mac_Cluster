@@ -24,7 +24,8 @@ docker-compose version
 
 由于 Mac 原生不支持本地连接，所以Mac需要在 docker-hub 里打开设置，找到 Resources，其中有一个 NetWork,勾选里面的Enable host networking
 
-![image-20250304114055580](/Users/lingjunhao/Library/Application Support/typora-user-images/image-20250304114055580.png)
+<img width="1564" alt="image-20250304114055580" src="https://github.com/user-attachments/assets/d61235b8-17f1-4c66-a9cc-dd5c8b9e823e" />
+
 
 ## 三、集群架构
 
@@ -275,6 +276,9 @@ DefaultLimitMEMLOCK=infinity
 docker ps 
 ```
 
-![image-20250304120049835](/Users/lingjunhao/Library/Application Support/typora-user-images/image-20250304120049835.png)`curl http://localhost:9200/_cat/health?v` 查看集群状态，出现如下信息则集群搭建成功
+<img width="1023" alt="image-20250304120049835" src="https://github.com/user-attachments/assets/c210c7f9-4128-44e7-901e-d1b7190011b7" />
 
-![image-20250304115928407](/Users/lingjunhao/Library/Application Support/typora-user-images/image-20250304115928407.png)
+`curl http://localhost:9200/_cat/health?v` 查看集群状态，出现如下信息则集群搭建成功
+
+<img width="1821" alt="image-20250304115928407" src="https://github.com/user-attachments/assets/72a0603e-2132-4add-8155-3844d777aea2" />
+
