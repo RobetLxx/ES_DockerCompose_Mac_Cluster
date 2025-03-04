@@ -7,7 +7,7 @@ services:
       - "5601:5601"
     environment:
       # es访问地址
-      ELASTICSEARCH_HOSTS: '["http://192.168.2.101:9200"]'
+      ELASTICSEARCH_HOSTS: '["http://192.168.2.101:9204"]'
       # kibana语言配置：en、zh-CN、ja-JP
       I18N_LOCALE: "zh-CN"
     network_mode: "host"
