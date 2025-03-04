@@ -5,19 +5,19 @@
 ### 2.1 Docker官网安装 Docker Desktop
 
 Mac安装很简单，只需要到[Docker Desktop 官网](https://www.docker.com/products/docker-desktop/)去下载对应 OS版本的就行，下载安装完会自动帮你加载 docker 和 docker-compose，不过当你需要使用时需要把这个 desktop 打开。否则 docker 就无法使用。
-![官网下载界面](/Users/lingjunhao/Library/Application Support/typora-user-images/image-20250304092837863.png)
-
+<img width="1680" alt="image-20250304092837863" src="https://github.com/user-attachments/assets/c6516609-2e28-43f8-9c2a-874c7f543eab" />
 ### 2.2 查看版本
 
 ```bash
 docker version
 docker-compose version
 ```
-![image-20250304093105654](/Users/lingjunhao/Library/Application Support/typora-user-images/image-20250304093105654.png)
+<img width="630" alt="image-20250304093105654" src="https://github.com/user-attachments/assets/bf64ea11-8f0f-4b56-8cdb-eeee99a56571" />
+
 
 之后需要更改 docker 的国内源，由于 hub.docker 官网国内限制挺大的，一般我们如果直接用pull 镜像下来会非常慢。所以尽量采用国内源。推荐去[这个网站](https://www.coderjia.cn/archives/dba3f94c-a021-468a-8ac6-e840f85867ea)去找最新的 docker 国内源地址。之后在 Desktop 里设置里找到 Docker Engine 然后将国内源替换进去。
 
-![image-20250304093500884](/Users/lingjunhao/Library/Application Support/typora-user-images/image-20250304093500884.png)
+<img width="1579" alt="image-20250304093500884" src="https://github.com/user-attachments/assets/9433b990-c254-41dd-91f1-f07822fa810c" />
 
 ## 三、集群架构
 
@@ -41,7 +41,7 @@ docker-compose version
 
 ## 四、集群配置
 ### 4.1 目录结构
-下载地址：[https://github.com/gm19900510/docker-es-cluster](https://github.com/gm19900510/docker-es-cluster)
+下载地址：https://github.com/RobetLxx/ES_DockerCompose_Mac_Cluster
 ```bash
 .
 ├── docker-es-data01
@@ -84,10 +84,9 @@ docker-compose version
 #### 4.2.1 master节点docker-compose.yml配置说明
 `docker-compose.yml` 是`docker-compose`的配置文件
 ```bash
-version: "3"
 services:
     es-master:
-        image: elasticsearch:7.9.3
+        image: elasticsearch:7.17.27
         container_name: es-master
         environment: # setting container env
             - ES_JAVA_OPTS=${ES_JVM_OPTS}   # set es bootstrap jvm args
